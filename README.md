@@ -1,6 +1,6 @@
 # DataCourierApp
 
-This is a full-stack application for system to retrieve files from any computer in multiple formats, integrating with BombitUp for enhanced functionality. Implemented instant email notifications.
+This is a full-stack application for system to retrieve files from any computer in multiple formats, integrating with BombitUp  functionalit like Implemented instant email notifications & sms notifications.
 
 ## Prerequisites
 
