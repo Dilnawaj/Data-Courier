@@ -22,6 +22,8 @@ public class User {
 	private String userType;
 
 	private String emailAddress;
+	
+	private String toNumber;
 
 	@Column(insertable = false)
 	private Date emailSentDate;
@@ -35,6 +37,13 @@ public class User {
 		this.userName = userName;
 		this.emailAddress = emailAddress;
 		this.userType = userType;
+	}
+	public User(String userName, String toNumber, String userType,String emailAddress) {
+		super();
+		this.userName = userName;
+		this.toNumber = toNumber;
+		this.userType = userType;
+		this.emailAddress = emailAddress;
 	}
 
 	public Long getUserId() {
@@ -73,4 +82,18 @@ public class User {
 		return emailSentDate;
 	}
 
+	public String getToNumber() {
+		return toNumber;
+	}
+
+	public void setToNumber(String toNumber) {
+		this.toNumber = toNumber;
+	}
+
+	public void setEmailSentDate(Date emailSentDate) {
+		this.emailSentDate = emailSentDate;
+	}
+
+	
+	
 }

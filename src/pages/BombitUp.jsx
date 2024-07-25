@@ -44,7 +44,7 @@ const BombitUp = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `${baseUrl}bombit?email=${email}&count=${count}`
+        `${baseUrl}bombit/email?email=${email}&count=${count}`
       );
       setReqId(response.data);
       toast.success("Email start sending!");
@@ -60,7 +60,7 @@ const BombitUp = () => {
   const handleSubmitStatus = async (id) => {
     try {
       const interval = setInterval(async () => {
-        const response = await axios.get(`${baseUrl}bombit/status?id=${id}`);
+        const response = await axios.get(`${baseUrl}bombit/email/status?id=${id}`);
         setReqCount(response.data);
         if (response.data == count) {
           clearInterval(interval);
@@ -125,7 +125,7 @@ const BombitUp = () => {
                   <Label for="number">Enter Count</Label>
                   <Input
                     type="number"
-                    placeholder="Please enter the count you wish to send"
+                    placeholder="Please enter the count you wish to send email"
                     id="number"
                     value={count}
                     required
@@ -135,7 +135,7 @@ const BombitUp = () => {
 
                 <Container className="text-center">
                   <Button color="warning" className="mr-2 mx-2" type="submit">
-                    BOMBIT
+                    BOMBIT Email
                   </Button>
                   
                   

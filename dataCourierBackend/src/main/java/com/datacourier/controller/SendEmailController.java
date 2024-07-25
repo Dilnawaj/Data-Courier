@@ -19,13 +19,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.datacourier.email.EmailService;
 import com.datacourier.email.EmailUtil;
-import com.datacourier.entities.User;
 import com.datacourier.model.UserDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -106,7 +104,7 @@ public class SendEmailController {
 	 * @param email Receiver email whom user wants to send email,
 	 * @return The method returns requestId of the specific data set.
 	 */
-	@GetMapping("/bombit")
+	@GetMapping("/bombit/email")
 	@Operation(summary = "This API is used for send  multiple email to receiver according to count user provides.", description = "Send Multiple Email")
 	public ResponseEntity<Long> sendMultipleEmailToUser(@RequestParam String email, @RequestParam Integer count)
 			throws UnsupportedEncodingException {
@@ -116,12 +114,12 @@ public class SendEmailController {
 	}
 
 	/**
-	 * This function is used to get status of files how many files has processed
+	 * This function is used to get status of emails how many files has processed
 	 *
 	 * @param id requestId used to get specific data from the data set,
 	 * @return It return Integer values how many many files has been processed.
 	 */
-	@GetMapping("/bombit/status")
+	@GetMapping("/bombit/email/status")
 	@Operation(summary = "This API is used to get count pf files which are processed.", description = "Count Multiple Email")
 	public ResponseEntity<Integer> getCountList(@RequestParam(value = "id") Long id) {
 		return new ResponseEntity<>(smtpEmailService.getCountList(id), HttpStatus.OK);
@@ -161,4 +159,32 @@ public class SendEmailController {
 			return new ResponseEntity<>("Invalid request", HttpStatus.BAD_REQUEST);
 		}
 	}
+
+	/**
+	 * This function is used to send Multiple message to user according to count.
+	 *
+	 * @param email Receiver message whom user wants to send message,
+	 * @return The method returns requestId of the specific data set.
+	 */
+	@GetMapping("/bombit/message")
+	@Operation(summary = "This API is used for send  multiple email to receiver according to count user provides.", description = "Send Multiple Email")
+	public ResponseEntity<Long> sendMultipleMultipleToUser(@RequestParam String number, @RequestParam Integer count)
+			throws UnsupportedEncodingException {
+		Long id = smtpEmailService.getId();
+		smtpEmailService.sendMultipleMessageToUser(number, count, id);
+		return new ResponseEntity<>(id, HttpStatus.OK);
+	}
+
+	/**
+	 * This function is used to get status of messages how many files has processed
+	 *
+	 * @param id requestId used to get specific data from the data set,
+	 * @return It return Integer values how many messages has been processed.
+	 */
+	@GetMapping("/bombit/sms/status")
+	@Operation(summary = "This API is used to get count pf files which are processed.", description = "Count Multiple Email")
+	public ResponseEntity<Integer> getCountListOfMessage(@RequestParam(value = "id") Long id) {
+		return new ResponseEntity<>(smtpEmailService.getCountListOfMessage(id), HttpStatus.OK);
+	}
+
 }

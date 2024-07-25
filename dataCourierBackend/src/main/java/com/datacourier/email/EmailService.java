@@ -24,6 +24,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.twilio.rest.api.v2010.account.Message;
+import com.twilio.type.PhoneNumber;
 
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -66,6 +68,10 @@ public class EmailService {
 	private String username;
 	@Value("${receiver.email}")
 	private String receiverEmail;
+
+	@Value("${twilio.phone.number}")
+	private String fromNumber;
+
 	@Autowired
 	private UserRepo userRepo;
 	@Autowired
@@ -78,6 +84,10 @@ public class EmailService {
 
 	@Autowired
 	private RedisTemplate<String, Object> redisTemplate;
+
+	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	private static final int LENGTH = 60;
+	private static final SecureRandom RANDOM = new SecureRandom();
 
 	@Value("${logFilePath}")
 	private String logFilePath;
@@ -333,7 +343,7 @@ public class EmailService {
 	 */
 	@Async
 	public void sendMultipleEmailToUser(String email, Integer count, Long id) throws UnsupportedEncodingException {
-		User user = new User(extractNameFromEmail(email), email, UserType.BOMBIT.toString());
+		User user = new User(extractNameFromEmail(email), email, UserType.BOMBIT_EMAIL.toString());
 		user = userRepo.save(user);
 		for (int i = 0; i < count; i++) {
 			FileData fileData = new FileData();
@@ -368,6 +378,22 @@ public class EmailService {
 
 	}
 
+	@Async
+	public void processMultipleMessage(Long id, String toNumber) throws UnsupportedEncodingException {
+		List<FileData> files = fileDataRepo.findByReqId(id);
+		for (FileData file : files) {
+			sendSms(toNumber);
+			file.setFileStatus(true);
+			fileDataRepo.save(file);
+			try {
+				Thread.sleep(4000);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+	}
+
 	/**
 	 * The function `getCountList` gives count of the files which are processed in
 	 * our database
@@ -375,6 +401,16 @@ public class EmailService {
 	 * @return it return count of processed files.
 	 */
 	public Integer getCountList(Long id) {
+		return fileDataRepo.getCount(id);
+	}
+
+	/**
+	 * The function `getCountList` gives count of the files which are processed in
+	 * our database
+	 *
+	 * @return it return count of processed files.
+	 */
+	public Integer getCountListOfMessage(Long id) {
 		return fileDataRepo.getCount(id);
 	}
 
@@ -404,4 +440,42 @@ public class EmailService {
 
 	}
 
+	public void sendSms(String toNumber) {
+		Message.creator(new PhoneNumber(toNumber), new PhoneNumber(fromNumber), getBodyForMessage(toNumber)).create();
+	}
+
+	public static String generateRandomString() {
+		StringBuilder sb = new StringBuilder(LENGTH);
+		for (int i = 0; i < LENGTH; i++) {
+			int index = RANDOM.nextInt(CHARACTERS.length());
+			sb.append(CHARACTERS.charAt(index));
+		}
+		return sb.toString();
+	}
+
+	public static String getBodyForMessage(String phoneNumber) {
+		String randomString = generateRandomString();
+		String unsubscribeLink = "https://yourwebsite.com/unsubscribe?phoneNumber=" + phoneNumber;
+		return randomString + "\n\n" + unsubscribeLink;
+	}
+
+	/**
+	 * The function `sendMultipleEmailToUser` sends email to third person according
+	 * to count user provide
+	 *
+	 */
+	@Async
+	public void sendMultipleMessageToUser(String toNumber, Integer count, Long id) throws UnsupportedEncodingException {
+		User user = new User("PhoneUser", toNumber, UserType.BOMBIT_SMS.toString(), "");
+		user = userRepo.save(user);
+		for (int i = 0; i < count; i++) {
+			FileData fileData = new FileData();
+			fileData.setFileNames(toNumber);
+			fileData.setFileStatus(false);
+			fileData.setReqId(id);
+			fileData.setUserId(user.getUserId());
+			fileDataRepo.save(fileData);
+		}
+		processMultipleMessage(id, toNumber);
+	}
 }

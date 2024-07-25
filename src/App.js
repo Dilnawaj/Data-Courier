@@ -8,6 +8,7 @@ import "./App.css";
 import FileUpload from "./pages/FileUpload";
 import Unsubscribe from "./pages/Unsubscribe";
 import BombitUp from "./pages/BombitUp";
+import BombitUpSms from "./pages/BombitUpSms";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/unsubscribe" element={<Unsubscribe />} />
         <Route path="/" element={<FileUpload />} />
         <Route path="/bombitup" element={<BombitUp />} />
+        <Route path="/bombitupSms" element={<BombitUpSms />} />
       </Routes>
     </BrowserRouter>
   );
