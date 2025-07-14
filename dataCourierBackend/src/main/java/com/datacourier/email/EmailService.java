@@ -36,7 +36,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -82,8 +81,6 @@ public class EmailService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@Autowired
-	private RedisTemplate<String, Object> redisTemplate;
 
 	private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 	private static final int LENGTH = 60;
@@ -134,13 +131,9 @@ public class EmailService {
 		String cacheKey = DataCourierConstant.USER_EMAIL + DataCourierConstant.DASH + email;
 
 		// Check if availability information is cache
-		String hasEmail = (String) redisTemplate.opsForValue().get(cacheKey);
 
-		if (hasEmail != null) {
-			return;
-		}
+
 		if (isUserUnsubscribe(email)) {
-			redisTemplate.opsForValue().set(cacheKey, email, 60, TimeUnit.MINUTES);
 			return;
 		}
 

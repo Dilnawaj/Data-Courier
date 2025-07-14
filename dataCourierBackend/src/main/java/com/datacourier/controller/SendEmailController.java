@@ -1,5 +1,6 @@
 package com.datacourier.controller;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import java.io.InputStream;
@@ -27,6 +28,8 @@ import com.datacourier.email.EmailUtil;
 import com.datacourier.model.UserDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -132,15 +135,25 @@ public class SendEmailController {
 	 * @param imageName it takes images name as input.
 	 */
 	@GetMapping(value = "/image/{imageName}", produces = MediaType.IMAGE_JPEG_VALUE)
-	@Operation(summary = "This API is used to set image on the server.", description = "Backgorund Image")
-	public void downloadImage(@PathVariable("imageName") String imageName, HttpServletResponse response)
-			throws IOException {
-		logger.info("This is an informational log message");
-		InputStream resource = this.smtpEmailService.getResource(path, imageName);
+	@Operation(summary = "This API is used to set image on the server.", description = "Background Image")
+	public void downloadImage(@PathVariable("imageName") String imageName, HttpServletResponse response) throws IOException {
+		logger.info("Fetching image: {}", imageName);
+
+		// Adjust if you support only png or jpg
+		String resourcePath = "images/" + imageName;
+
+		InputStream resource = getClass().getClassLoader().getResourceAsStream(resourcePath);
+
+		if (resource == null) {
+			throw new FileNotFoundException("Could not find " + resourcePath + " in classpath");
+		}
+
+		// Optionally detect content type dynamically instead of always IMAGE_JPEG_VALUE
+		// response.setContentType(Files.probeContentType(Paths.get(imageName)));
 		response.setContentType(MediaType.IMAGE_JPEG_VALUE);
 		StreamUtils.copy(resource, response.getOutputStream());
-
 	}
+
 
 	/**
 	 * This function is used to logs server status.

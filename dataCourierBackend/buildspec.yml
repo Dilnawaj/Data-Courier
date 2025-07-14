@@ -1,0 +1,25 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 795653277563.dkr.ecr.eu-north-1.amazonaws.com
+      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
+  build:
+    commands:
+      - echo Building Maven project...
+      - mvn clean package -DskipTests
+      - echo Building Docker image...
+      - docker build -t simple-docker-service-0e68e0ad2a91:latest -t simple-docker-service-0e68e0ad2a91:$IMAGE_TAG .
+  post_build:
+    commands:
+      - echo Tag & Push Docker image to ECR...
+      - docker tag simple-docker-service-0e68e0ad2a91:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/simple-docker-service-0e68e0ad2a91:latest
+      - docker tag simple-docker-service-0e68e0ad2a91:$IMAGE_TAG 795653277563.dkr.ecr.eu-north-1.amazonaws.com/simple-docker-service-0e68e0ad2a91:$IMAGE_TAG
+      - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/simple-docker-service-0e68e0ad2a91:latest
+      - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/simple-docker-service-0e68e0ad2a91:$IMAGE_TAG
+
+artifacts:
+  files:
+    - '**/*'
