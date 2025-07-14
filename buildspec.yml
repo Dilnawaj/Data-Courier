@@ -9,9 +9,8 @@ phases:
     runtime-versions:
       java: corretto21
     commands:
-      - echo Installing Maven...
       - apt-get update
-      - apt-get install -y maven docker.io
+      - apt-get install -y maven
 
   pre_build:
     commands:
@@ -22,9 +21,10 @@ phases:
     commands:
       - echo Building the Maven project...
       - mvn clean package -DskipTests
+      - echo Listing target directory to check jar:
+      - ls -l target/
       - echo Building the Docker image...
-      - ls target/  # <--- debug: list to confirm jar exists
-      - docker build -t $IMAGE_NAME .
+      - docker build -t $IMAGE_NAME -f ./Dockerfile .
 
   post_build:
     commands:
