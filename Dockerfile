@@ -1,13 +1,13 @@
-# Use official OpenJDK 21 base image
+# Use official lightweight OpenJDK 21 image
 FROM eclipse-temurin:21-jdk-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy built jar file into the container
-COPY target/*.jar app.jar
+# Copy built jar into the container
+COPY target/datacourier-0.0.1-SNAPSHOT.jar app.jar
 
-# Expose port 5000 (Beanstalk Docker expects this)
+# Expose port 5000 (as you set in application.properties)
 EXPOSE 5000
 
 # Run the Spring Boot app on port 5000

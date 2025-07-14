@@ -1,26 +1,31 @@
 version: 0.2
 
+env:
+  variables:
+    IMAGE_NAME: simple-docker-service-0e68e0ad2a91
+
 phases:
+  install:
+    commands:
+      - echo Installing Maven...
+      - apt-get update
+      - apt-get install -y maven docker.io
+
   pre_build:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 795653277563.dkr.ecr.eu-north-1.amazonaws.com
-      - IMAGE_TAG=$(echo $CODEBUILD_RESOLVED_SOURCE_VERSION | cut -c 1-7)
-      - IMAGE_NAME=simple-docker-service-0e68e0ad2a91
+
   build:
     commands:
-      - echo Building Maven project...
+      - echo Building the Maven project...
       - mvn clean package -DskipTests
-      - echo Building Docker image...
-      - docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:$IMAGE_TAG .
+      - echo Building the Docker image...
+      - docker build -t $IMAGE_NAME .
+
   post_build:
     commands:
-      - echo Tag & Push Docker image to ECR...
+      - echo Tagging the image...
       - docker tag $IMAGE_NAME:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
-      - docker tag $IMAGE_NAME:$IMAGE_TAG 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
+      - echo Pushing the Docker image...
       - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
-      - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:$IMAGE_TAG
-
-artifacts:
-  files:
-    - '**/*'
