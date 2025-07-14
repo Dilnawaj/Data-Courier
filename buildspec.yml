@@ -9,6 +9,7 @@ phases:
     runtime-versions:
       java: corretto21
     commands:
+      - echo Installing Maven...
       - apt-get update
       - apt-get install -y maven
 
@@ -19,18 +20,18 @@ phases:
 
   build:
     commands:
-      - echo Building the Maven project...
+      - echo Building Maven project...
       - mvn clean package -DskipTests
-      - echo Listing target directory to check jar:
+      - echo Checking if jar exists:
       - ls -l target/
-      - echo Building the Docker image...
+      - echo Building Docker image...
       - docker build -t $IMAGE_NAME -f ./Dockerfile .
 
   post_build:
     commands:
-      - echo Tagging the image...
+      - echo Tagging image...
       - docker tag $IMAGE_NAME:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
-      - echo Pushing the Docker image...
+      - echo Pushing Docker image to ECR...
       - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
 
 artifacts:
