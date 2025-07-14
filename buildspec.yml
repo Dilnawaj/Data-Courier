@@ -6,6 +6,8 @@ env:
 
 phases:
   install:
+    runtime-versions:
+      java: corretto21
     commands:
       - echo Installing Maven...
       - apt-get update
@@ -21,6 +23,7 @@ phases:
       - echo Building the Maven project...
       - mvn clean package -DskipTests
       - echo Building the Docker image...
+      - ls target/  # <--- debug: list to confirm jar exists
       - docker build -t $IMAGE_NAME .
 
   post_build:
@@ -29,3 +32,7 @@ phases:
       - docker tag $IMAGE_NAME:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
       - echo Pushing the Docker image...
       - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
+
+artifacts:
+  files:
+    - target/*.jar
