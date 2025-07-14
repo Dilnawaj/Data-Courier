@@ -22,7 +22,7 @@ phases:
     commands:
       - echo Building Maven project...
       - mvn clean package -DskipTests
-      - echo Checking if jar exists:
+      - echo Checking target folder:
       - ls -l target/
       - echo Building Docker image...
       - docker build -t $IMAGE_NAME -f ./Dockerfile .
@@ -31,7 +31,7 @@ phases:
     commands:
       - echo Tagging image...
       - docker tag $IMAGE_NAME:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
-      - echo Pushing Docker image to ECR...
+      - echo Pushing image to ECR...
       - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
 
 artifacts:
