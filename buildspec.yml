@@ -9,15 +9,31 @@ phases:
     commands:
       - echo Logging in to Amazon ECR...
       - aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 795653277563.dkr.ecr.eu-north-1.amazonaws.com
-
   build:
     commands:
       - echo Building Docker image with multi-stage build...
       - docker build -t $IMAGE_NAME -f ./Dockerfile .
-
   post_build:
     commands:
       - echo Tagging image...
       - docker tag $IMAGE_NAME:latest 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
       - echo Pushing image to ECR...
       - docker push 795653277563.dkr.ecr.eu-north-1.amazonaws.com/$IMAGE_NAME:latest
+      - echo Creating Dockerrun.aws.json...
+      - |
+        echo '{
+          "AWSEBDockerrunVersion": "1",
+          "Image": {
+            "Name": "795653277563.dkr.ecr.eu-north-1.amazonaws.com/'"$IMAGE_NAME"':latest",
+            "Update": "true"
+          },
+          "Ports": [
+            {
+              "ContainerPort": "5000"
+            }
+          ]
+        }' > Dockerrun.aws.json
+
+artifacts:
+  files:
+    - Dockerrun.aws.json
