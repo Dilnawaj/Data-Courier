@@ -18,4 +18,20 @@ public class HealthCheckController {
     {
         return ResponseEntity.ok("Test APi");
     }
+
+
+
+
+
+    @GetMapping("/home")
+    public ResponseEntity<String>  testApiHome()
+    {
+        return ResponseEntity.ok("Test Home");
+    }
+
+
+
+
+
+
 }
