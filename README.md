@@ -38,19 +38,18 @@ To run the React app, follow these steps:
    npm install
 3.Start the React app:
 
-bash
-Copy
-Edit
-npm start
+## Running the React Backend App
 
-Running the React Backend App
-Run MySQL server and create a database named blog_app_apis.
+To run the backend (Spring Boot) application, follow these steps:
 
-Set up App Password and run the Spring Boot app using the following commands:
+1. Run MySQL server and create a database named `blog_app_apis`.
 
-bash
-Copy
-Edit
-mvn clean install -U   # (if needed)
-mvn clean install
-mvn spring-boot:run
+2. Set up your email service credentials (App Password and Client ID for Gmail SMTP).
+
+3. In the backend project directory, run the following commands:
+
+   ```bash
+   mvn clean install -U   # only if needed
+   mvn clean install
+   mvn spring-boot:run
+
