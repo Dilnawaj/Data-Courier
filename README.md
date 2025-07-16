@@ -1,6 +1,8 @@
 # DataCourierApp
 
 This is a full-stack application for system to retrieve files from any computer in multiple formats, integrating with BombitUp  functionalit like Implemented instant email notifications & sms notifications.
+FrontEnd URL: https://data-courier-dewlxaxeu-dilnawajs-projects.vercel.app/
+Backend URL:http://datacourier-env.eu-north-1.elasticbeanstalk.com/
 
 ## Prerequisites
 
