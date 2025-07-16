@@ -1,58 +1,56 @@
-DataCourierApp
-DataCourierApp is a full-stack application that allows users to retrieve files from any computer in multiple formats. It integrates BombitUp-like functionality such as instant email notifications and SMS alerts.
+# DataCourierApp
 
-Prerequisites
-Ensure the following tools and platforms are installed and configured before running the application:
+This is a full-stack application for system to retrieve files from any computer in multiple formats, integrating with BombitUp functionality like implemented instant email notifications & SMS notifications.
 
-Backend
-Java (JDK)
+**FrontEnd URL:** [https://data-courier-dewlxaxeu-dilnawajs-projects.vercel.app/](https://data-courier-dewlxaxeu-dilnawajs-projects.vercel.app/)  
+**Backend URL:** [http://datacourier-env.eu-north-1.elasticbeanstalk.com/](http://datacourier-env.eu-north-1.elasticbeanstalk.com/)
 
-Spring Boot
+---
 
-MySQL
+## Prerequisites
 
-Logger (e.g., SLF4J)
+Before running this application, ensure you have the following installed:
 
-Frontend
-React.js
+### Backend
+- JAVA  
+- SpringBoot  
+- Logger  
+- MySQL  
 
-JavaScript
+### Frontend
+- React Js  
+- JavaScript  
+- HTML  
+- CSS  
 
-HTML
+---
 
-CSS
+## Running the React App
 
-Running the Backend (Spring Boot)
-Run MySQL server and create a database named blog_app_apis.
+To run the React app, follow these steps:
 
-Configure SMTP for email services:
+1. Set up environment variable `REACT_APP_API_KEY` in a `.env` file.
 
-Use your email, App Password, and Client ID (if using Google OAuth).
+2. Install dependencies:
 
-In the backend project directory, run the following commands:
-
-bash
-Copy
-Edit
-mvn clean install -U   # only if needed
-mvn clean install
-mvn spring-boot:run
-Running the Frontend (React)
-Create a .env file in the root directory and set the environment variable:
-
-ini
-Copy
-Edit
-REACT_APP_API_KEY=your_api_key_here
-Install dependencies:
-
-bash
-Copy
-Edit
-npm install --legacy-peer-deps
-Start the React application:
+   ```bash
+   npm install --legacy-peer-deps
+   npm install
+3.Start the React app:
 
 bash
 Copy
 Edit
 npm start
+
+Running the React Backend App
+Run MySQL server and create a database named blog_app_apis.
+
+Set up App Password and run the Spring Boot app using the following commands:
+
+bash
+Copy
+Edit
+mvn clean install -U   # (if needed)
+mvn clean install
+mvn spring-boot:run
