@@ -12,7 +12,7 @@ phases:
   build:
     commands:
       - echo Building Docker image with multi-stage build...
-      - docker build -t $IMAGE_NAME -f ./Dockerfile .
+      - docker build -t $IMAGE_NAME -f ./dataCourierBackend/Dockerfile ./dataCourierBackend/
   post_build:
     commands:
       - echo Tagging image...
