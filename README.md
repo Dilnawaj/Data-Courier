@@ -39,7 +39,8 @@ To run the React app, follow these steps:
 3.Start the React app:
  ```bash
    npm start
-  
+
+
 ## Running the React Backend App
 
 To run the backend (Spring Boot) application, follow these steps:
