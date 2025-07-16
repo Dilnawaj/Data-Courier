@@ -38,7 +38,7 @@ To run the React app, follow these steps:
    npm install
 3.Start the React app:
  ```bash
-   npm start
+   npm start```
 
 
 ## Running the React Backend App
